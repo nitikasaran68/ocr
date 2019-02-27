@@ -64,16 +64,8 @@ def create_model():
     loss_out = Lambda(ctc_lambda_func, output_shape=(1,), name='ctc')([y_true, y_pred, input_length, label_length])
 
     # Loss function algo
-    sgd = SGD(lr=0.02, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5)
+    # sgd = SGD(lr=0.02, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5)
 
     crnn_model = Model(inputs=[img_input, y_true, input_length, label_length], outputs=loss_out)
     
     return crnn_model
-
-# Main code
-
-model = create_model()
-model.summary()
-
-#im = np.transpose(img,(1,0,2))
-#https://www.dlology.com/blog/how-to-train-a-keras-model-to-recognize-variable-length-text/
