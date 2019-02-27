@@ -53,7 +53,7 @@ def process_images(base_path, save_path, file):
                 io.imwrite(img_file_path, proc_img)
 
             # Should prevent inodes exceeded errors
-            os.remove(orig_img_path)
+            # os.remove(orig_img_path)
         except:
             # Write the corrupt file path in a separate file to process them later.
             corrupt_files.write(path + '\n')
