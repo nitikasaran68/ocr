@@ -6,7 +6,8 @@ from keras.utils import Sequence
 
 def get_image(img_filename):
     img = io.imread(img_filename)
-    return np.array(img)
+    img = np.array(img)
+    return np.expand_dims(img, axis=-1)
 
 class MJSynthData(Sequence):
 
@@ -23,15 +24,28 @@ class MJSynthData(Sequence):
         self.batch_size = batch_size
 
     def __len__(self):
-        return np.ceil(self.dataset_size/float(self.batch_size))
+        return int(np.ceil(self.dataset_size/float(self.batch_size)))
 
     def __getitem__(self, idx):
         start_idx = idx * self.batch_size
         end_idx = min((idx+1)*self.batch_size, self.dataset_size)
-
+        size = end_idx - start_idx
+        
         batch_x = np.array([get_image(os.path.join(self.data_folder, file_name)) 
                         for file_name in self.image_filenames[start_idx:end_idx]])
         batch_y = np.array([encode(label) 
                         for label in self.labels[start_idx:end_idx]])
+        print(batch_y.shape)
+        input_length = np.ones(size) * 25
+        label_length = np.array([len(label) for label in self.labels[start_idx:end_idx]])
 
-        return batch_x, batch_y
+        inputs = {
+                'img_input': batch_x,
+                'ground_truth': batch_y,
+                'input_length': input_length,
+                'label_length': label_length
+            }
+        outputs = {
+            'ctc': np.zeros([size])
+            } 
+        return inputs, outputs

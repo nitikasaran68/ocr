@@ -57,7 +57,7 @@ def create_model():
     #  Model(inputs=img_input, outputs=y_pred).summary()
 
     # Input specifications for CTC Function
-    y_true = Input(name='ground_truth', shape=[max_string_len], dtype='float32')
+    y_true = Input(name='ground_truth', shape=[max_string_len], dtype='int64')
     input_length = Input(name='input_length', shape=[1], dtype='int64')
     label_length = Input(name='label_length', shape=[1], dtype='int64')
     
@@ -67,7 +67,8 @@ def create_model():
     # sgd = SGD(lr=0.02, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5)
 
     crnn_model_train = Model(inputs=[img_input, y_true, input_length, label_length], outputs=loss_out)
-    crnn_model_test = Model(inputs = [img_input], outputs = y_pred)
+    crnn_model_test = Model(inputs=[img_input], outputs=y_pred)
+
     return crnn_model_train, crnn_model_test
 
 def get_model(training):

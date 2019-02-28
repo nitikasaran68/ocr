@@ -1,9 +1,9 @@
 import numpy as np
-from param import alphabet, rev_alphabet
+from param import alphabet, rev_alphabet, max_string_len
 
 def encode(label):
     len_label = len(label)
-    ret = np.zeros(len_label)
+    ret = np.ones(max_string_len) * len(alphabet)
     for idx, char in zip(range(len_label), label):
         ret[idx] = alphabet[char]
     return ret.astype(int)
