@@ -1,21 +1,9 @@
 import numpy as np
 import imageio as io
-import imutils
 import os
 import sys
-from PIL import Image
+from utils import rgb2gray, process
 from pathlib import Path
-
-def rgb2gray(rgb):
-    r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
-    gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
-    return gray
-
-def process(img):
-    gray_img = rgb2gray(img)
-    rotated_img = imutils.rotate_bound(gray_img, 90)
-    final_img = Image.fromarray(rotated_img).resize((32, 100))
-    return np.array(final_img, dtype='uint8')
 
 def process_images(base_path, save_path, file):
     corrupt_files = open(os.path.join(save_path, 'corrupt_files.txt'), 'w')

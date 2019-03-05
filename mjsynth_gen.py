@@ -6,12 +6,12 @@ from keras.utils import Sequence
 
 class MJSynthData(Sequence):
 
-    def __init__(self, data_folder, annotation_file, batch_size):
+    def __init__(self, data_dir, annotation_file, batch_size):
     	# each line is of the form './path/to/img number'
-        with open(os.path.join(data_folder, annotation_file), 'r') as f:
+        with open(os.path.join(data_dir, annotation_file), 'r') as f:
             filenames = [line.split(' ')[0][2:] for line in f]
         self.image_filenames = filenames
-        self.data_folder = data_folder
+        self.data_folder = data_dir
 
         # each filename is like 'index number_label_number' 
         self.labels = [file.split('_')[1] for file in filenames]

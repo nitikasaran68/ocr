@@ -10,7 +10,7 @@ img_w = 100
 img_h = 32
 
 img_input_shape = (img_w, img_h, 1)
-max_string_len = 20
+max_string_len = 25
 
-batch_size = 128
+batch_size = 32
 validation_batch_size = 16
