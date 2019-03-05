@@ -18,3 +18,8 @@ def decode(encoded_label):
         else:
             ret.append(rev_alphabet[encoded_char])
     return "".join(ret)
+
+def get_image(img_filename):
+    img = io.imread(img_filename)
+    img = np.array(img)
+    return np.expand_dims(img, axis=-1)

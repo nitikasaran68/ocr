@@ -1,13 +1,8 @@
 import imageio as io
 import numpy as np
 import os
-from utils import encode
+from utils import encode, get_image
 from keras.utils import Sequence
-
-def get_image(img_filename):
-    img = io.imread(img_filename)
-    img = np.array(img)
-    return np.expand_dims(img, axis=-1)
 
 class MJSynthData(Sequence):
 
@@ -35,7 +30,7 @@ class MJSynthData(Sequence):
                         for file_name in self.image_filenames[start_idx:end_idx]])
         batch_y = np.array([encode(label) 
                         for label in self.labels[start_idx:end_idx]])
-        print(batch_y.shape)
+
         input_length = np.ones(size) * 25
         label_length = np.array([len(label) for label in self.labels[start_idx:end_idx]])
 
