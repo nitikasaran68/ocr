@@ -3,6 +3,7 @@ from param import max_string_len
 
 from keras import backend as K
 from keras.layers import Conv2D, MaxPooling2D, Input
+from keras.layers import ZeroPadding2D
 from keras.layers import BatchNormalization, Reshape
 from keras.models import Model
 from keras.layers import LSTM, Lambda
@@ -33,31 +34,35 @@ def create_model():
 
     conv_3 = Conv2D(256, (3, 3), activation='relu', padding='same',
                     name='conv_3')(max_pool_2)
+    normalize_1 = BatchNormalization()(conv_3)
     conv_4 = Conv2D(256, (3, 3), activation='relu', padding='same',
-                    name='conv_4')(conv_3)
-    max_pool_3 = MaxPooling2D((1, 2), strides=(1, 2), name='pool_3')(conv_4)
+                    name='conv_4')(normalize_1)
+
+    padding_0 = ZeroPadding2D(padding=(1, 0), name='padding_0')(conv_4)
+    max_pool_3 = MaxPooling2D((2, 2), strides=(1, 2), name='pool_3')(padding_0)
 
     conv_5 = Conv2D(512, (3, 3), activation='relu', padding='same',
                     name='conv_5')(max_pool_3)
-    normalize_1 = BatchNormalization()(conv_5)
+    normalize_2 = BatchNormalization()(conv_5)
 
     conv_6 = Conv2D(512, (3, 3), activation='relu', padding='same',
-                    name='conv_6')(normalize_1)
-    normalize_2 = BatchNormalization()(conv_6)
+                    name='conv_6')(normalize_2)
+    normalize_3 = BatchNormalization()(conv_6)
 
-    max_pool_4 = MaxPooling2D((1, 2), strides=(1, 2),
-                              name='pool_4')(normalize_2)
-    conv_7 = Conv2D(512, (2, 2), activation='relu', padding='same',
+    padding_1 = ZeroPadding2D(padding=(1, 0))(normalize_3)
+    max_pool_4 = MaxPooling2D((2, 2), strides=(1, 2),
+                              name='pool_4')(padding_1)
+    conv_7 = Conv2D(512, (2, 2), activation='relu', padding='valid',
                     name='conv_7')(max_pool_4)
 
     # CNN to RNN
-    reshape = Reshape((25, 1024), input_shape=(25, 2, 512))(conv_7)
+    reshape = Reshape((26, 512), input_shape=(26, 1, 512))(conv_7)
 
     # RNN
 
-    bi_lstm_1 = Bidirectional(LSTM(256, input_shape=(25, 1024),
+    bi_lstm_1 = Bidirectional(LSTM(256, input_shape=(26, 512),
                               return_sequences=True, name='bi_lstm1'))(reshape)
-    bi_lstm_2 = Bidirectional(LSTM(256, input_shape=(25, 1024),
+    bi_lstm_2 = Bidirectional(LSTM(256, input_shape=(26, 512),
                               return_sequences=True,
                               name='bi_lstm2'))(bi_lstm_1)
 

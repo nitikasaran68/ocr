@@ -16,5 +16,5 @@ max_string_len = 25
 # Training specific parameters
 time_steps = 23
 epochs = 5
-batch_size = 128
-validation_batch_size = 16
+batch_size = 64
+validation_batch_size = 256
