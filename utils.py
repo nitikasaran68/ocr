@@ -51,3 +51,44 @@ def process(img):
     rotated_img = imutils.rotate_bound(gray_img, 90)
     final_img = Image.fromarray(rotated_img).resize((32, 100))
     return np.array(final_img, dtype='uint8')
+def word_error(filename):
+    with open(filename , 'r') as fl:
+        lines = fl.read().split('\n')
+    correct = 0
+    total = 0
+    for line in lines:
+        words = line.split(' ')
+        if(words[0] == words[1]):
+            correct+=1
+        total+=1
+    error = 1-(correct/total)
+    return error
+
+def character_error(filename):
+    with open(filename , 'r') as fl:
+        lines = fl.read().split('\n')
+    incorrect = 0
+    total = 0
+    for line in lines:
+        words = line.split(' ')
+        m = len(words[0])
+        n = len(words[1])
+        i = 0
+        j = 0
+        while(i<m or j<n):
+            if i>=m :
+                incorrect+=n-j
+                total+=n-j
+                break
+            elif j>=n:
+                total+=m-i
+                incorrect+=m-i
+                break
+            else:
+                if(words[0][i] != words[1][j]):
+                    incorrect+=1
+                total+=1
+            i+=1
+            j+=1
+    error = incorrect/total
+    return error
